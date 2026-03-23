@@ -4,7 +4,9 @@ from django.views.decorators.http import require_http_methods
 from .models import CalendarEvent, User
 import json
 
+#Login - Signup 
 
+#=========================================================================
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def calendar_list_create(request):
