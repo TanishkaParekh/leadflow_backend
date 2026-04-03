@@ -42,14 +42,14 @@ def pipeline_view(request):
             "total_value":total_value,
             "deals":serializer.data,
         })
-        
+    #closed and lost deals for separate display  
     closed_deals=deals.filter(is_won=True)
     lost_deals=deals.filter(is_lost=True)
 
     return Response({
         "pipeline":pipeline_data,
-        closed_deals:DealSerializer(closed_deals,many=True).data,
-        lost_deals:DealSerializer(lost_deals,many=True).data,
+        "closed_deals":DealSerializer(closed_deals,many=True).data,
+        "lost_deals":DealSerializer(lost_deals,many=True).data,
     })
 
 @api_view(['PATCH']) #update deal (DRAG AND DROP)
