@@ -10,7 +10,7 @@ from .serializers import ExecutivePerformanceSerializer
 
 @api_view(["GET"])
 def reports_dashboard(request):
-    # 🔐 Extract user from JWT (FIX)
+    # Extract user from JWT (FIX)
     try:
         jwt_auth = JWTAuthentication()
         auth_header = request.headers.get("Authorization")
