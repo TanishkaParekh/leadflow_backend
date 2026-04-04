@@ -1,33 +1,18 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Count, Sum
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from leads.models import Lead, User
+from leads.models import Lead
 from pipeline.models import Deal
 from .serializers import ExecutivePerformanceSerializer
 
 
 @api_view(["GET"])
 def reports_dashboard(request):
-    # Extract user from JWT (FIX)
-    try:
-        jwt_auth = JWTAuthentication()
-        auth_header = request.headers.get("Authorization")
 
-        if not auth_header:
-            return Response({"error": "Authorization header missing"}, status=401)
+    user = request.user  
 
-        token = auth_header.split()[1]
-        validated_token = jwt_auth.get_validated_token(token)
-
-        user_id = validated_token.get("user_id")
-        user = User.objects.get(id=user_id)
-
-    except Exception as e:
-        return Response({"error": f"Authentication failed: {str(e)}"}, status=401)
-
-    # 🔹 Role-based filtering (NOW WORKS)
+    # 🔹 Role-based filtering
     if user.role and user.role.name == "Sales Rep":
         leads = Lead.objects.filter(assigned_to=user)
         deals = Deal.objects.filter(lead__assigned_to=user)

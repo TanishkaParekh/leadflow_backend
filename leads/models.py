@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
 
 
-# Role
+# 🔹 Role
 class Role(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
@@ -12,7 +12,7 @@ class Role(models.Model):
         return self.name
 
 
-# Team
+# 🔹 Team
 class Team(models.Model):
     name = models.CharField(max_length=100)
     manager = models.ForeignKey(
@@ -24,14 +24,13 @@ class Team(models.Model):
         return self.name
 
 
-# User
-class User(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15, blank=True)
 
-    password = models.CharField(max_length=255)
+class User(AbstractUser):
+   
+    username = None  
+    email = models.EmailField(unique=True)
+
+    phone = models.CharField(max_length=15, blank=True)
 
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
 
@@ -45,21 +44,15 @@ class User(models.Model):
 
     profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True)
 
-    is_active = models.BooleanField(default=True)
-
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.password.startswith('pbkdf2_'):
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
 
 
-# LeadSource
+# 🔹 LeadSource
 class LeadSource(models.Model):
     name = models.CharField(max_length=100)
     utm_campaign = models.CharField(max_length=100, blank=True)
@@ -70,7 +63,7 @@ class LeadSource(models.Model):
         return self.name
 
 
-# Lead
+# 🔹 Lead
 class Lead(models.Model):
     STATUS_CHOICES = [
         ('new', 'New'),
@@ -107,7 +100,7 @@ class Lead(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-# FollowUp
+# 🔹 FollowUp
 class FollowUp(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -131,7 +124,7 @@ class FollowUp(models.Model):
         return f"FollowUp for {self.lead}"
 
 
-# PipelineStage
+# 🔹 PipelineStage
 class PipelineStage(models.Model):
     name = models.CharField(max_length=100)
     order = models.IntegerField()
@@ -141,7 +134,7 @@ class PipelineStage(models.Model):
         return self.name
 
 
-# Deal
+# 🔹 Deal
 class Deal(models.Model):
     lead = models.ForeignKey(Lead, on_delete=models.CASCADE)
 
@@ -161,7 +154,7 @@ class Deal(models.Model):
         return self.title
 
 
-# Invoice
+# 🔹 Invoice
 class Invoice(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -189,7 +182,7 @@ class Invoice(models.Model):
         return self.invoice_number
 
 
-# Payment
+# 🔹 Payment
 class Payment(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
@@ -206,7 +199,7 @@ class Payment(models.Model):
         return self.transaction_id
 
 
-# CalendarEvent
+# 🔹 CalendarEvent
 class CalendarEvent(models.Model):
     EVENT_TYPE_CHOICES = [
         ('call', 'Call'),
@@ -239,7 +232,7 @@ class CalendarEvent(models.Model):
         return self.title
 
 
-# Notification
+# 🔹 Notification
 class Notification(models.Model):
     TYPE_CHOICES = [
         ('followup', 'Follow-up'),
@@ -267,7 +260,7 @@ class Notification(models.Model):
         return f"Notification to {self.receiver}"
 
 
-# Report
+# 🔹 Report
 class Report(models.Model):
     REPORT_TYPE_CHOICES = [
         ('revenue', 'Revenue'),

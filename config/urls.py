@@ -27,4 +27,5 @@ urlpatterns = [
     path('api/scheduling/', include('scheduling.urls')),
     path('api/tasks/', include('tasks.urls')),
     path('api/token/refresh/', TokenRefreshView.as_view()),
+    path('api/pipeline/', include('pipeline.urls')),
 ]
