@@ -1,10 +1,12 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import CalendarEvent
 from .serializers import CalendarEventSerializer
 
 class CalendarEventViewSet(viewsets.ModelViewSet):
     serializer_class = CalendarEventSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = CalendarEvent.objects.all().order_by('start_time')
