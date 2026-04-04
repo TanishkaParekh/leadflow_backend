@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'reports',
     'invoices',
+    'scheduling',
 ]
 
 MIDDLEWARE = [
@@ -140,7 +141,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'signup': '5/min',
         'login': '10/min',
-    }
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
