@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt.token_blacklist',
     'leads',
     'pipeline',
     'corsheaders',
@@ -142,6 +143,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'signup': '5/min',
         'login': '10/min',
+        'user': '1000/day',
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,

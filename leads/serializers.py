@@ -21,7 +21,7 @@ PASSWORD_REGEX = re.compile(
 
 def _get_tokens(user: User) -> dict:
     """Return a fresh JWT access/refresh pair for the given user."""
-    refresh = RefreshToken()
+    refresh = RefreshToken().for_user(user)
     refresh['user_id'] = user.id
     refresh['email'] = user.email
     refresh['role'] = user.role.name if user.role else None
@@ -83,10 +83,12 @@ class SignupSerializer(serializers.Serializer):
             last_name=validated_data['last_name'],
             email=validated_data['email'],
             phone=validated_data.get('phone', ''),
-            password=validated_data['password'],   # hashed in model.save()
             role=role,
             is_active=True,
         )
+
+        user.set_password(validated_data['password'])
+        user.save()
 
         tokens = _get_tokens(user)
         return {
